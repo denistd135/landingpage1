@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seoul Workshop 2025</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        /* Apply the Apple system font family */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f0f2f5;
+            color: #374151;
+        }
+        /* Define Theme Colors */
+        :root {
+            --one-magenta: #E6007E;
+            --one-magenta-dark: #c4006b;
+            --one-navy: #002d62;
+            --one-blue: #3b82f6;
+            --one-green: #10b981;
+            /* Integration Flow Colors */
+            --pom-green: #10b981;
+            --tailwind-purple: #8b5cf6;
+            --aoq-pink: #ec4899;
+            /* Roadmap specific colors */
+            --roadmap-oq: #e6007e; /* Using one-magenta for OQ projects */
+            --roadmap-oqflex: #3b82f6; /* Using one-blue for OQFlex */
+            --roadmap-oog: #00506D; /* Darker blue for OOG */
+            --roadmap-digital: #f97316; /* Orange for Digital Campaign */
+        }
+        /* Custom Tailwind classes */
+        .bg-one-magenta { background-color: var(--one-magenta); }
+        .bg-one-blue { background-color: var(--one-blue); }
+        .bg-one-green { background-color: var(--one-green); }
+        .bg-one-navy { background-color: var(--one-navy); }
+        .text-one-magenta { color: var(--one-magenta); }
+        .text-one-navy { color: var(--one-navy); }
+        
+        /* Glassmorphism Classes */
+        .glass-pane {
+            background: rgba(255, 255, 255, 0.5);
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+        }
+        /* Specific opacity for dropdown menu for better readability */
+        .dropdown-glass-pane {
+            background: rgba(255, 255, 255, 0.9); /* Increased opacity for readability */
+            -webkit-backdrop-filter: blur(15px);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+        }
+        /* Hover effect for dropdown menu items */
+        .dropdown-glass-pane a {
+            transition: all 0.2s ease-in-out;
+        }
+        .dropdown-glass-pane a:hover {
+            transform: scale(1.03);
+            box-shadow: 0 0 10px rgba(230, 0, 126, 0.1);
+        }
+
+
+        .header-glass {
+             background: rgba(255, 255, 255, 0.7);
+             -webkit-backdrop-filter: blur(15px);
+             backdrop-filter: blur(15px);
+             border-bottom: 1px solid rgba(230, 230, 230, 0.7);
+        }
+        
+        /* Button Style */
+        .btn-primary {
+            display: inline-block;
+            color: white;
+            background-color: var(--one-magenta);
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease-in-out;
+            text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+        }
+        .btn-primary:hover {
+            background-color: var(--one-magenta-dark);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transform: translateY(-2px);
+        }
+
+        /* Consistent Card Animation on Hover */
+        .animated-card {
+            opacity: 0;
+            transform: translateY(40px) scale(0.98);
+            transition: opacity 0.8s cubic-bezier(0.165, 0.84, 0.44, 1), transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.3s ease;
+        }
+        .animated-card.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        .animated-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 0 40px rgba(230, 0, 126, 0.2); /* Stronger glow effect */
+        }
+        .animated-card .step-badge {
+            transition: all 0.3s ease;
+        }
+        .animated-card:hover .step-badge {
+            background-color: var(--one-magenta) !important;
+            transform: scale(1.15) rotate(10deg);
+        }
+
+        /* Flow connector lines */
+        .flow-connector-vertical {
+            position: relative;
+            height: 3.5rem; /* Gap between cards */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 0;
+        }
+        .flow-connector-vertical::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            height: 100%;
+            border-left: 2px dotted #d1d5db;
+            transform: translateX(-50%);
+        }
+        .flow-connector-vertical svg {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 1.5rem;
+            height: 1.5rem;
+            color: #d1d5db;
+            fill: currentColor;
+        }
+        /* Corrected SVG path for a downward arrow */
+        .flow-connector-vertical svg path {
+            d: path("M12 21L4 13L11 13V3h2v10h7L12 21z"); /* Path data for a clear downward arrow */
+        }
+
+        /* Roadmap Timeline Specific Styles */
+        .roadmap-timeline-container {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch; /* For smooth scrolling on iOS */
+            padding-bottom: 1.5rem; /* Space for scrollbar */
+        }
+        .roadmap-timeline-grid {
+            display: grid;
+            /* Removed the 120px label column, now starts directly with 52 fractional units */
+            grid-template-columns: repeat(52, 1fr); 
+            gap: 0.25rem; /* Adjusted gap */
+            align-items: center;
+            min-width: 1000px; /* Ensure it's wide enough to scroll */
+            padding-left: 1.5rem; /* Padding for bars to not stick to left edge */
+            padding-right: 1.5rem; /* Padding for bars to not stick to right edge */
+        }
+        .roadmap-month-row {
+            grid-column: 1 / -1; /* Spans across all week columns, starting from first column */
+            display: grid;
+            grid-template-columns: subgrid;
+            text-align: center;
+            border-bottom: 1px solid #e5e7eb; /* Light gray border */
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem; /* Space between months and bars */
+        }
+        .roadmap-month-label {
+            font-size: 0.875rem; /* text-sm */
+            font-weight: 700; /* font-bold - Highlighted */
+            color: #1f2937; /* gray-900 - Highlighted */
+        }
+        /* Hide week numbers and project labels */
+        .roadmap-week-numbers-row {
+            display: none; /* Hide the entire row of week numbers */
+        }
+        .roadmap-week-label {
+            display: none; /* Ensure individual labels are hidden if row is not */
+        }
+
+        .roadmap-project-row {
+            grid-column: 1 / -1; /* Start from the first column */
+            display: contents; /* Allows children to participate directly in grid */
+            position: relative; /* For z-index to work */
+        }
+        /* Explicitly hide the roadmap project label (if still present in HTML) */
+        .roadmap-project-label {
+            display: none; /* Hide the label content */
+        }
+        
+        .roadmap-bar-wrapper {
+            grid-column: 1 / -1; /* Start from the first column and span to the end */
+            position: relative; /* Container for absolute bars */
+            height: 1.5rem; /* Fixed height for consistent rows */
+            margin-bottom: 0.5rem; /* Space between rows */
+        }
+        .roadmap-bar {
+            height: 1.5rem;
+            border-radius: 0.5rem;
+            opacity: 0.85;
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out, box-shadow 0.3s ease;
+            position: absolute;
+            display: flex;
+            align-items: center;
+            padding-left: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: white;
+            white-space: nowrap;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .roadmap-bar.hover-effect:hover {
+            transform: scaleY(1.2) scaleX(1.005);
+            opacity: 1;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 10; /* Bring hovered bar to front */
+        }
+        /* Specific colors for roadmap bars */
+        .bg-roadmap-oq { background-color: var(--roadmap-oq); }
+        .bg-roadmap-oqflex { background-color: var(--roadmap-oqflex); }
+        .bg-roadmap-oog { background-color: var(--roadmap-oog); }
+        .bg-roadmap-digital { background-color: var(--roadmap-digital); }
+
+        .today-marker-line {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 2px; /* Line thickness */
+            border-left: 2px dotted var(--one-magenta);
+            z-index: 10;
+            pointer-events: none; /* Ensure it doesn't block interactions */
+        }
+        .today-marker-label {
+            position: absolute;
+            top: -1.5rem; /* Adjust position above the line */
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--one-magenta);
+            white-space: nowrap;
+            pointer-events: none; /* Ensure it doesn't block interactions */
+        }
+
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <header class="header-glass fixed top-0 left-0 right-0 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <nav class="flex items-center justify-between">
+                <div>
+                    <a href="#" class="text-2xl font-bold text-gray-900">Seoul Workshop<span class="text-one-magenta"> 2025</span></a>
+                    <p class="text-xs text-gray-600" style="margin-top: -2px;">AOQ Demo & Scope in 2025</p>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <div class="relative group">
+                        <button class="text-gray-600 hover:text-one-magenta transition duration-300 flex items-center py-2">
+                            <span>Agenda</span>
+                            <svg class="w-4 h-4 ml-1 text-gray-500 group-hover:rotate-180 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div class="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-64 dropdown-glass-pane rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 translate-y-2 transition-all duration-300 z-50">
+                            <div class="p-2">
+                                <a href="#one-quote-flex-topic" class="block px-4 py-2 text-sm text-gray-700 rounded-lg hover:bg-white/50 hover:text-one-magenta">ONE QUOTE Flex</a>
+                                <a href="#inland-tariff-topic" class="block px-4 py-2 text-sm text-gray-700 rounded-lg hover:bg-white/50 hover:text-one-magenta">Inland Based Pricing</a>
+                                <a href="#aoq-roadmap-topic" class="block px-4 py-2 text-sm text-gray-700 rounded-lg hover:bg-white/50 hover:text-one-magenta">AOQ Roadmap Discussion</a>
+                                <a href="#oog-roadmap-topic" class="block px-4 py-2 text-sm text-gray-700 rounded-lg hover:bg-white/50 hover:text-one-magenta">OOG Roadmap</a>
+                                <a href="#digital-marketing-topic" class="block px-4 py-2 text-sm text-gray-700 rounded-lg hover:bg-white/50 hover:text-one-magenta">Digital Marketing PoC</a>
+                                <a href="#q-and-a-topic" class="block px-4 py-2 text-sm text-gray-700 rounded-lg hover:bg-white/50 hover:text-one-magenta">Q&A</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button id="mobile-menu-button" class="md:hidden text-gray-600 hover:text-one-magenta focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Sticky Horizontal Nav -->
+    <nav id="sticky-nav" class="header-glass fixed top-0 left-0 right-0 z-40 transition-transform duration-500 -translate-y-full">
+         <div class="container mx-auto px-6 py-3 flex justify-center items-center space-x-6 text-sm">
+             <a href="#one-quote-flex-topic" class="text-gray-600 hover:text-one-magenta font-semibold">ONE QUOTE Flex</a>
+             <a href="#inland-tariff-topic" class="text-gray-600 hover:text-one-magenta font-semibold">Inland Pricing</a>
+             <a href="#aoq-roadmap-topic" class="text-gray-600 hover:text-one-magenta font-semibold">AOQ Roadmap</a>
+             <a href="#oog-roadmap-topic" class="text-gray-600 hover:text-one-magenta font-semibold">OOG Roadmap</a>
+             <a href="#digital-marketing-topic" class="text-gray-600 hover:text-one-magenta font-semibold">Digital Marketing</a>
+             <a href="#q-and-a-topic" class="text-gray-600 hover:text-one-magenta font-semibold">Q&A</a>
+        </div>
+    </nav>
+
+
+    <main>
+        <section id="agenda" class="relative min-h-screen flex flex-col items-center justify-center text-center overflow-hidden py-24">
+            <div class="relative z-20 px-6 w-full">
+                <h1 class="text-4xl md:text-6xl lg:text-7xl font-extrabold text-gray-900 leading-tight mb-4">Seoul Workshop 2025</h1>
+                <p class="text-xl md:text-2xl text-gray-700 mb-16 max-w-3xl mx-auto">AOQ Demo & Scope in 2025</p>
+                
+                <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <a href="#one-quote-flex-topic" class="animated-card agenda-card glass-pane">
+                        <div class="p-8"><p class="text-sm font-bold text-one-magenta">TOPIC 01</p><h3 class="text-3xl font-bold text-one-navy mt-2">ONE QUOTE Flex</h3></div>
+                    </a>
+                    <a href="#inland-tariff-topic" class="animated-card agenda-card glass-pane">
+                        <div class="p-8"><p class="text-sm font-bold text-one-magenta">TOPIC 02</p><h3 class="text-3xl font-bold text-one-navy mt-2">Inland Based Pricing</h3></div>
+                    </a>
+                    <a href="#aoq-roadmap-topic" class="animated-card agenda-card glass-pane">
+                        <div class="p-8"><p class="text-sm font-bold text-one-magenta">TOPIC 03</p><h3 class="text-3xl font-bold text-one-navy mt-2">AOQ Roadmap Discussion</h3></div>
+                    </a>
+                    <a href="#oog-roadmap-topic" class="animated-card agenda-card glass-pane">
+                        <div class="p-8"><p class="text-sm font-bold text-one-magenta">TOPIC 04</p><h3 class="text-3xl font-bold text-one-navy mt-2">OOG Roadmap</h3></div>
+                    </a>
+                    <a href="#digital-marketing-topic" class="animated-card agenda-card glass-pane">
+                        <div class="p-8"><p class="text-sm font-bold text-one-magenta">TOPIC 05</p><h3 class="text-3xl font-bold text-one-navy mt-2">Digital Marketing PoC</h3></div>
+                    </a>
+                     <a href="#q-and-a-topic" class="animated-card agenda-card glass-pane">
+                        <div class="p-8"><p class="text-sm font-bold text-one-magenta">TOPIC 06</p><h3 class="text-3xl font-bold text-one-navy mt-2">Q&A</h3></div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <div id="one-quote-flex-topic" class="container mx-auto px-6 py-16">
+            <div class="glass-pane rounded-3xl p-8 md:p-12">
+                 <section class="text-center">
+                     <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight mb-4">ONE QUOTE Flex</h1>
+                     <p class="text-xl md:text-2xl text-gray-700 mx-auto max-w-3xl">Rate Security Without the Booking Pressure. Get flexible short-term FAK rates instantly.</p>
+                </section>
+                
+                <section class="py-20 lg:py-24">
+                        <div class="text-center mb-16">
+                            <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">What is ONE QUOTE Flex?</h2>
+                            <div class="w-24 h-1 bg-one-magenta mx-auto mb-12"></div>
+                        </div>
+                        <div class="grid md:grid-cols-2 gap-12 items-center">
+                            <div class="text-left">
+                                 <p class="text-lg text-gray-700 leading-relaxed"><strong>ONE QUOTE Flex</strong> is an online quotation platform enabling customers to secure short-term FAK rates <strong class="text-one-magenta">without booking commitment</strong> or time constraints. <br/><br/>Designed for convenience, its <strong class="text-one-magenta">"ONE Click Pricing"</strong> service eliminates manual handling of daily rate inquiries, making it invaluable for customers who need pricing visibility without immediate booking needs.</p>
+                            </div>
+                            <div class="space-y-6">
+                                <div class="animated-card glass-pane p-6 flex items-start rounded-2xl">
+                                    <div class="flex-shrink-0"><div class="step-badge flex items-center justify-center h-12 w-12 rounded-full bg-one-magenta text-white"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div></div>
+                                    <div class="ml-4"><h4 class="text-lg leading-6 font-bold text-gray-900">Flexible Planning</h4><p class="mt-2 text-base text-gray-600">Secure rates with up to 3 months validity without the pressure to book immediately.</p></div>
+                                </div>
+                                <div class="animated-card glass-pane p-6 flex items-start rounded-2xl">
+                                     <div class="flex-shrink-0"><div class="step-badge flex items-center justify-center h-12 w-12 rounded-full bg-one-magenta text-white"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg></div></div>
+                                    <div class="ml-4"><h4 class="text-lg leading-6 font-bold text-gray-900">Instant Pricing</h4><p class="mt-2 text-base text-gray-600">Get immediate "ONE Click Pricing" to streamline your decision-making process.</p></div>
+                                </div>
+                            </div>
+                        </div>
+                </section>
+                
+                <section class="py-20 lg:py-24">
+                        <div class="text-center mb-16">
+                            <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">Flexible Quoting, Powerful Benefits</h2>
+                            <div class="w-24 h-1 bg-one-magenta mx-auto"></div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            <div class="animated-card glass-pane p-8 rounded-2xl text-center">
+                                <div class="text-one-magenta inline-block mb-4"><svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg></div>
+                                <h3 class="text-xl font-bold text-gray-900 mb-3">Rate Security Without Booking Pressure</h3>
+                                <p class="text-gray-600">Access and compare FAK rates freely, with no booking obligation, anytime.</p>
+                            </div>
+                            <div class="animated-card glass-pane p-8 rounded-2xl text-center">
+                                 <div class="text-one-magenta inline-block mb-4"><svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg></div>
+                                <h3 class="text-xl font-bold text-gray-900 mb-3">Reduces Manual Workload</h3>
+                                <p class="text-gray-600">Minimizes the need for manual contract creation and amendments by Sales.</p>
+                            </div>
+                            <div class="animated-card glass-pane p-8 rounded-2xl text-center">
+                               <div class="text-one-magenta inline-block mb-4"><svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg></div>
+                                <h3 class="text-xl font-bold text-gray-900 mb-3">Improves Sales Team Efficiency</h3>
+                                <p class="text-gray-600">Sales teams can shift focus from routine rate requests to delivering value-added, customer-centric services.</p>
+                            </div>
+                        </div>
+                </section>
+                
+                <section class="py-20 lg:py-24">
+                        <div class="text-center mb-16">
+                            <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">Two Platforms, One Solution</h2>
+                            <div class="w-24 h-1 bg-one-magenta mx-auto"></div>
+                        </div>
+                        <div class="grid lg:grid-cols-2 gap-8 items-start">
+                            <div class="bg-white/50 p-6 rounded-2xl">
+                                <div class="bg-white rounded-lg shadow-md overflow-hidden mb-6">
+                                    <div class="bg-gray-200 px-4 py-2 flex items-center"><span class="h-3 w-3 rounded-full bg-red-500 block mr-2"></span><span class="h-3 w-3 rounded-full bg-yellow-400 block mr-2"></span><span class="h-3 w-3 rounded-full bg-green-500 block"></span></div>
+                                    <img src="https://i.imgur.com/z4zX6qL.png" alt="ONE QUOTE Spot Interface" class="w-full h-48 object-cover object-top" onerror="this.onerror=null;this.src='https://placehold.co/800x550/e9e9e9/999?text=ONE+QUOTE+Spot+UI';">
+                                </div>
+                                <h3 class="text-2xl font-bold text-gray-800 mb-4">ONE QUOTE (Spot)</h3>
+                                <p class="text-gray-600">For customers who are ready to book immediately with short-term rate and booking linkage.</p>
+                            </div>
+                            <div class="bg-white/50 p-6 rounded-2xl border-2 border-one-magenta">
+                                 <div class="bg-white rounded-lg shadow-md overflow-hidden mb-6">
+                                    <div class="bg-gray-200 px-4 py-2 flex items-center"><span class="h-3 w-3 rounded-full bg-red-500 block mr-2"></span><span class="h-3 w-3 rounded-full bg-yellow-400 block mr-2"></span><span class="h-3 w-3 rounded-full bg-green-500 block"></span></div>
+                                    <img src="https://i.imgur.com/dKxZAY7.png" alt="ONE QUOTE Flex Interface" class="w-full h-48 object-cover object-top" onerror="this.onerror=null;this.src='https://placehold.co/800x550/e9e9e9/999?text=ONE+QUOTE+Flex+UI';">
+                                </div>
+                                 <h3 class="text-2xl font-bold text-one-magenta mb-4">ONE QUOTE Flex</h3>
+                                 <p class="text-gray-600">For customers who require longer rate validity (less than 3 months) without the pressure to book, enabling flexible planning and decision-making.</p>
+                            </div>
+                        </div>
+                </section>
+
+                 <section class="py-20 lg:py-24">
+                    <div class="text-center mb-16">
+                        <h2 class="text-3xl lg:text-4xl font-gray-900 mb-6">High Level Flow</h2>
+                    </div>
+                    <div class="grid lg:grid-cols-2 gap-12 items-start">
+                        <div>
+                            <h3 class="text-2xl font-bold text-one-navy mb-6 text-center">Main Flow</h3>
+                            <div class="relative pl-8 space-y-8">
+                                <div class="absolute top-0 left-4 h-full w-0.5 border-l-2 border-dotted border-gray-300"></div>
+                                <div class="animated-card glass-pane p-6 rounded-2xl flex gap-4"><div class="step-badge w-10 h-10 rounded-full bg-blue-500 text-white flex-shrink-0 flex items-center justify-center font-bold">1</div><div><h4 class="font-bold text-one-navy">Search Quote</h4><p class="text-sm text-gray-600">Input Route, Validity Range, and Cargo Type, then click "GetQuote".</p></div></div>
+                                <div class="flow-connector-vertical">
+                                    <svg viewBox="0 0 24 24"><path d="M12 21L4 13L11 13V3h2v10h7L12 21z"></path></svg>
+                                </div>
+                                <div class="animated-card glass-pane p-6 rounded-2xl flex gap-4"><div class="step-badge w-10 h-10 rounded-full bg-blue-500 text-white flex-shrink-0 flex items-center justify-center font-bold">2</div><div><h4 class="font-bold text-one-navy">Quote Results</h4><p class="text-sm text-gray-600">View results and choose to create a contract or add to cart.</p><ul class="text-xs list-disc pl-5 mt-2 space-y-1 text-gray-500"><li><b>2.1: Add to cart:</b> Saves selected pairs to My Cart.</li><li><b>2.2: Create Contract Draft:</b> Moves to the next step.</li></ul></div></div>
+                                <div class="flow-connector-vertical">
+                                    <svg viewBox="0 0 24 24"><path d="M12 21L4 13L11 13V3h6v10h5l-8 8z"></path></svg>
+                                </div>
+                                <div class="animated-card glass-pane p-6 rounded-2xl flex gap-4"><div class="step-badge w-10 h-10 rounded-full bg-blue-500 text-white flex-shrink-0 flex items-center justify-center font-bold">3</div><div><h4 class="font-bold text-one-navy">Contract Draft</h4><p class="text-sm text-gray-600">Review quote, accept T&Cs, and click "Submit".</p></div></div>
+                                <div class="flow-connector-vertical">
+                                    <svg viewBox="0 0 24 24"><path d="M12 21L4 13L11 13V3h6v10h5l-8 8z"></path></svg>
+                                </div>
+                                <div class="animated-card glass-pane p-6 rounded-2xl flex gap-4"><div class="step-badge w-10 h-10 rounded-full bg-one-green text-white flex-shrink-0 flex items-center justify-center font-bold">4</div><div><h4 class="font-bold text-one-navy">Submit Quotation</h4><p class="text-sm text-gray-600">View "Contract Successfully Submitted" screen. (END)</p></div></div>
+                            </div>
+                        </div>
+                         <div>
+                             <h3 class="text-2xl font-bold text-one-navy mb-6 text-center">Create Contract From My Cart</h3>
+                            <div class="relative pl-8 space-y-8">
+                                <div class="absolute top-0 left-4 h-full w-0.5 border-l-2 border-dotted border-gray-300"></div>
+                                <div class="animated-card glass-pane p-6 rounded-2xl flex gap-4"><div class="step-badge w-10 h-10 rounded-full bg-gray-400 text-white flex-shrink-0 flex items-center justify-center font-bold">→</div><div><h4 class="font-bold text-one-navy">My Cart Page</h4><p class="text-sm text-gray-600">User clicks "My Cart" button, selects pairs, and clicks "Create Contract Draft".</p></div></div>
+                                <div class="flow-connector-vertical">
+                                    <svg viewBox="0 0 24 24"><path d="M12 21L4 13L11 13V3h6v10h5l-8 8z"></path></svg>
+                                </div>
+                                <div class="animated-card glass-pane p-6 rounded-2xl flex gap-4"><div class="step-badge w-10 h-10 rounded-full bg-blue-500 text-white flex-shrink-0 flex items-center justify-center font-bold">3</div><div><h4 class="font-bold text-one-navy">Contract Draft</h4><p class="text-sm text-gray-600">Redirected to Step 3. Review quote, accept T&Cs, and click "Submit".</p></div></div>
+                                <div class="flow-connector-vertical">
+                                    <svg viewBox="0 0 24 24"><path d="M12 21L4 13L11 13V3h6v10h5l-8 8z"></path></svg>
+                                </div>
+                                <div class="animated-card timeline-item glass-pane p-6 rounded-2xl flex gap-4"><div class="step-badge w-10 h-10 rounded-full bg-one-green text-white flex-shrink-0 flex items-center justify-center font-bold">4</div><div><h4 class="font-bold text-one-navy">Submit Quotation</h4><p class="text-sm text-gray-600">View "Contract Successfully Submitted" screen. (END)</p></div></div>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="text-center mt-12">
+                        <a href="https://ecomm-test.one-line.com/one-ecom/prices/one-quote-booking" target="_blank" class="btn-primary py-2 px-5">View Demo</a>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <section id="inland-tariff-topic" class="py-20 lg:py-32">
+            <div class="container mx-auto px-6">
+                <div class="glass-pane rounded-3xl p-8 md:p-12">
+                    <div class="text-center mb-16">
+                        <h2 class="text-3xl lg:text-4xl font-bold text-one-navy mb-4">Inland Based Pricing</h2>
+                        <p class="text-xl text-gray-600">A high-level overview of the tariff connection process.</p>
+                    </div>
+
+                    <div class="mb-20">
+                        <h3 class="text-2xl font-bold text-center text-gray-800 mb-12">Integration Flow</h3>
+                        <div class="relative max-w-5xl mx-auto p-4">
+                             <svg class="absolute top-0 left-0 w-full h-full" style="z-index: 1;">
+                                <defs><marker id="arrowhead-integration" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#a78bfa"></path></marker></defs>
+                                <path d="M 33% 50% H 67%" stroke="#a78bfa" stroke-width="2" marker-end="url(#arrowhead-integration)" stroke-dasharray="5,5"></path>
+                                <path d="M 67% 50% H 100%" stroke="#a78bfa" stroke-width="2" marker-end="url(#arrowhead-integration)" stroke-dasharray="5,5" transform="translateX(-16.67%)"></path>
+                            </svg>
+                            <div class="grid grid-cols-3 gap-8 relative" style="z-index: 2;">
+                                <div class="text-center">
+                                    <div class="p-6 rounded-2xl glass-pane border-2 h-full" style="border-color: var(--pom-green);">
+                                        <h4 class="text-xl font-bold" style="color: var(--pom-green);">POM</h4>
+                                        <ul class="text-sm text-gray-600 mt-2 text-left list-disc pl-5 space-y-1">
+                                            <li>Searches for IHC Base Port list</li>
+                                            <li>Checks for available MRG</li>
+                                            <li>Updates haulage & FMC indicator</li>
+                                            <li>Filters out non-connected MRGs</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="p-6 rounded-2xl glass-pane border-2 h-full" style="border-color: var(--tailwind-purple);">
+                                        <h4 class="text-xl font-bold" style="color: var(--tailwind-purple);">Tailwind</h4>
+                                         <ul class="text-sm text-gray-600 mt-2 text-left list-disc pl-5 space-y-1">
+                                            <li>Initiates IHC surcharge simulation</li>
+                                            <li>Searches E2E Route Info via NPRD API</li>
+                                            <li>Maps OFT + IHC charges</li>
+                                            <li>Runs surcharge simulation</li>
+                                            <li>Removes inclusive surcharges</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="p-6 rounded-2xl glass-pane border-2 h-full" style="border-color: var(--aoq-pink);">
+                                        <h4 class="text-xl font-bold" style="color: var(--aoq-pink);">AOQ</h4>
+                                         <ul class="text-sm text-gray-600 mt-2 text-left list-disc pl-5 space-y-1">
+                                            <li>User Interface</li>
+                                            <li>Display Results</li>
+                                            <li>User Input Handling</li>
+                                            <li>Booking Submission</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                             <div class="text-center mt-8">
+                                <!-- The "View Diagram" button was here and is now removed. -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 class="text-2xl font-bold text-center text-gray-800 mb-12">ONE QUOTE User Flow</h3>
+                        <div class="max-w-4xl mx-auto">
+                            <div class="relative pl-8 space-y-8">
+                                <div class="absolute top-0 left-4 h-full w-0.5 border-l-2 border-dotted border-gray-300"></div>
+                                <div class="animated-card timeline-item glass-pane p-6 rounded-2xl flex flex-col md:flex-row items-center gap-8">
+                                    <div class="step-badge absolute -left-11 top-1/2 -translate-y-1/2 w-6 h-6 bg-one-magenta rounded-full flex items-center justify-center text-white text-xs font-bold">01</div>
+                                    <div class="md:w-2/3"><h3 class="font-bold text-xl text-one-navy">Input Route</h3><p class="text-sm text-gray-500 mb-2">Search Quote</p><p class="text-gray-600">User selects port pair in Origin & Destination. The system checks inland base port list & related surcharges.</p></div>
+                                    <div class="md:w-1/3"><img src="https://i.imgur.com/z4zX6qL.png" alt="Input Route UI" class="rounded-lg shadow-lg w-full h-40 object-cover object-top"></div>
+                                </div>
+                                <div class="flow-connector-vertical">
+                                    <svg viewBox="0 0 24 24"><path d="M12 21L4 13L11 13V3h2v10h7L12 21z"></path></svg>
+                                </div>
+                                <div class="animated-card timeline-item glass-pane p-6 rounded-2xl flex flex-col md:flex-row items-center gap-8">
+                                    <div class="step-badge absolute -left-11 top-1/2 -translate-y-1/2 w-6 h-6 bg-one-magenta rounded-full flex items-center justify-center text-white text-xs font-bold">02</div>
+                                    <div class="md:w-2/3"><h3 class="font-bold text-xl text-one-navy">Confirm Connection</h3><p class="text-sm text-gray-500 mb-2">Search Quote</p><p class="text-gray-600">A popup appears, and the user can decide to proceed with the Inland Tariff connection or discard.</p><div class="mt-4 border-l-4 border-red-300 pl-4"><h4 class="font-semibold text-red-600">Discard Path (2.1)</h4><p class="text-sm text-gray-600">If discarded, the user returns to the Search Quote screen to select a new port pair.</p></div></div>
+                                    <div class="md:w-1/3"><img src="https://i.imgur.com/L3bbr8r.png" alt="Confirmation Popup" class="rounded-lg shadow-lg w-full h-40 object-cover object-center"></div>
+                                </div>
+                                <div class="flow-connector-vertical">
+                                    <svg viewBox="0 0 24 24"><path d="M12 21L4 13L11 13V3h6v10h5l-8 8z"></path></svg>
+                                </div>
+                                 <div class="animated-card timeline-item glass-pane p-6 rounded-2xl flex flex-col md:flex-row items-center gap-8">
+                                   <div class="step-badge absolute -left-11 top-1/2 -translate-y-1/2 w-6 h-6 bg-one-magenta rounded-full flex items-center justify-center text-white text-xs font-bold">03</div>
+                                   <div class="md:w-2/3"><h3 class="font-bold text-xl text-one-navy">Select Container & Weight</h3><p class="text-sm text-gray-500 mb-2">Search Quote</p><p class="text-gray-600">After confirming, the user can continue to select the Equipment Type and input the Cargo Weight.</p></div>
+                                   <div class="md:w-1/3"><img src="https://i.imgur.com/9v4J4gH.png" alt="Select Container & Weight" class="rounded-lg shadow-lg w-full h-40 object-cover object-top"></div>
+                               </div>
+                                <div class="flow-connector-vertical">
+                                    <svg viewBox="0 0 24 24"><path d="M12 21L4 13L11 13V3h6v10h5l-8 8z"></path></svg>
+                                </div>
+                               <div class="animated-card timeline-item glass-pane p-6 rounded-2xl flex flex-col md:flex-row items-center gap-8">
+                                   <div class="step-badge absolute -left-11 top-1/2 -translate-y-1/2 w-6 h-6 bg-one-magenta rounded-full flex items-center justify-center text-white text-xs font-bold">04</div>
+                                   <div class="md:w-2/3"><h3 class="font-bold text-xl text-one-navy">Select Date</h3><p class="text-sm text-gray-500 mb-2">Search Quote</p><p class="text-gray-600">User selects a date from a calendar showing rates and inland surcharges.</p></div>
+                                   <div class="md:w-1/3"><img src="https://i.imgur.com/dKxZAY7.png" alt="Select Date Calendar" class="rounded-lg shadow-lg w-full h-40 object-cover object-top"></div>
+                               </div>
+                                <div class="flow-connector-vertical">
+                                    <svg viewBox="0 0 24 24"><path d="M12 21L4 13L11 13V3h6v10h5l-8 8z"></path></svg>
+                                </div>
+                               <div class="animated-card timeline-item glass-pane p-6 rounded-2xl flex flex-col md:flex-row items-center gap-8">
+                                   <div class="step-badge absolute -left-11 top-1/2 -translate-y-1/2 w-6 h-6 bg-one-blue rounded-full flex items-center justify-center text-white text-xs font-bold">05</div>
+                                   <div class="md:w-2/3"><h3 class="font-bold text-xl text-one-navy">View VVDs with Trip Type</h3><p class="text-sm text-gray-500 mb-2">GetQuote, Quote Accepted</p><p class="text-gray-600">User will see the "Trip Type" displayed in the POL/POD columns of the VVD list, indicating an inland service.</p></div>
+                                   <div class="md:w-1/3"><img src="https://i.imgur.com/eB3b2V1.png" alt="VVD List with Trip Type" class="rounded-lg shadow-lg w-full h-40 object-cover object-top"></div>
+                               </div>
+                                <div class="flow-connector-vertical">
+                                    <svg viewBox="0 0 24 24"><path d="M12 21L4 13L11 13V3h6v10h5l-8 8z"></path></svg>
+                                </div>
+                               <div class="animated-card timeline-item glass-pane p-6 rounded-2xl flex flex-col md:flex-row items-center gap-8">
+                                   <div class="step-badge absolute -left-11 top-1/2 -translate-y-1/2 w-6 h-6 bg-one-blue rounded-full flex items-center justify-center text-white text-xs font-bold">06</div>
+                                   <div class="md:w-2/3"><h3 class="font-bold text-xl text-one-navy">See Surcharge Breakdown</h3><p class="text-sm text-gray-500 mb-2">GetQuote, Quote Accepted</p><p class="text-gray-600">On the detailed breakdown view, the user will see all IHC/ARS surcharges clearly displayed.</p></p></div>
+                                   <div class="md:w-1/3"><img src="https://i.imgur.com/eB3b2V1.png" alt="Surcharge Breakdown" class="rounded-lg shadow-lg w-full h-40 object-cover object-top"></div>
+                               </div>
+                                <div class="flow-connector-vertical">
+                                    <svg viewBox="0 0 24 24"><path d="M12 21L4 13L11 13V3h6v10h5l-8 8z"></path></svg>
+                                </div>
+                               <div class="animated-card timeline-item glass-pane p-6 rounded-2xl flex flex-col md:flex-row items-center gap-8">
+                                   <div class="step-badge absolute -left-11 top-1/2 -translate-y-1/2 w-6 h-6 bg-one-green rounded-full flex items-center justify-center text-white text-xs font-bold">07</div>
+                                   <div class="md:w-2/3"><h3 class="font-bold text-xl text-one-navy">View Remarks</h3><p class="text-sm text-gray-500 mb-2">Additional Information</p><p class="text-gray-600">The system automatically displays a fixed remark for the Origin/Destination Transmode in the Special Instructions section.</p></div>
+                                   <div class="md:w-1/3"><img src="https://i.imgur.com/gK2Qyvf.png" alt="Special Instructions with Remarks" class="rounded-lg shadow-lg w-full h-40 object-cover object-top"></div>
+                               </div>
+                                <div class="flow-connector-vertical">
+                                    <svg viewBox="0 0 24 24"><path d="M12 21L4 13L11 13V3h6v10h5l-8 8z"></path></svg>
+                                </div>
+                               <div class="animated-card timeline-item glass-pane p-6 rounded-2xl flex flex-col md:flex-row items-center gap-8">
+                                   <div class="step-badge absolute -left-11 top-1/2 -translate-y-1/2 w-6 h-6 bg-one-navy rounded-full flex items-center justify-center text-white text-xs font-bold">08</div>
+                                   <div class="md:w-2/3"><h3 class="font-bold text-xl text-one-navy">Submit to ONE</h3><p class="text-sm text-gray-500 mb-2">Booking Submission</p><p class="text-gray-600">When the user submitted booking successfully, all information related to IHC/ARB surcharges & remarks will be captured and send to OPUS Booking & Contract Filling.</p></div>
+                                   <div class="md:w-1/3"><img src="https://placehold.co/600x400/002d62/ffffff?text=Submission+Success" alt="Booking Submission" class="rounded-lg shadow-lg w-full h-40 object-cover"></div>
+                               </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center mt-12">
+                        <a href="https://ecomm-test.one-line.com/one-ecom/prices/one-quote-booking" target="_blank" class="btn-primary py-2 px-5">View Demo</a>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <section id="aoq-roadmap-topic" class="py-20 lg:py-32">
+             <div class="container mx-auto px-6"><div class="glass-pane rounded-3xl p-8 md:p-12 text-center">
+                 <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">AOQ Roadmap Discussion</h2>
+                 <p class="text-xl text-gray-600 mb-12">Timeline of upcoming features for ONE Quote.</p>
+
+                 <div class="roadmap-timeline-container text-left">
+                     <div class="roadmap-timeline-grid">
+                         <!-- Month Labels -->
+                         <div class="roadmap-month-row">
+                             <div class="roadmap-month-label" style="grid-column: span 4;">Apr</div>
+                             <div class="roadmap-month-label" style="grid-column: span 4;">May</div>
+                             <div class="roadmap-month-label" style="grid-column: span 4;">Jun</div>
+                             <div class="roadmap-month-label" style="grid-column: span 4;">Jul</div>
+                             <div class="roadmap-month-label" style="grid-column: span 4;">Aug</div>
+                             <div class="roadmap-month-label" style="grid-column: span 4;">Sep</div>
+                             <div class="roadmap-month-label" style="grid-column: span 4;">Oct</div>
+                             <div class="roadmap-month-label" style="grid-column: span 4;">Nov</div>
+                             <div class="roadmap-month-label" style="grid-column: span 4;">Dec</div>
+                             <div class="roadmap-month-label" style="grid-column: span 4;">Jan</div>
+                             <div class="roadmap-month-label" style="grid-column: span 4;">Feb</div>
+                             <div class="roadmap-month-label" style="grid-column: span 4;">Mar</div>
+                         </div>
+                         <!-- Week Numbers (Removed) -->
+                         <div class="roadmap-week-numbers-row"></div>
+
+
+                         <!-- Project: OQ: Food Grade -->
+                         <div class="roadmap-project-row">
+                             <div class="roadmap-project-label">OQ: Food Grade</div>
+                             <div class="roadmap-bar-wrapper">
+                                 <div class="roadmap-bar bg-roadmap-oq hover-effect animated-card" style="left: calc(0 * (100% / 52)); width: calc(8 * (100% / 52));">OQ: Food Grade</div>
+                             </div>
+                         </div>
+
+                         <!-- Project: OQ: PUDO -->
+                         <div class="roadmap-project-row">
+                             <div class="roadmap-project-label">OQ: PUDO</div>
+                             <div class="roadmap-bar-wrapper">
+                                 <div class="roadmap-bar bg-roadmap-oq hover-effect animated-card" style="left: calc(0 * (100% / 52)); width: calc(8 * (100% / 52));">OQ: PUDO</div>
+                             </div>
+                         </div>
+                         
+                         <!-- Project: OQ: Enhance Missing Port Pair -->
+                         <div class="roadmap-project-row">
+                             <div class="roadmap-project-label">OQ: Enhance Missing Port Pair</div>
+                             <div class="roadmap-bar-wrapper">
+                                 <div class="roadmap-bar bg-roadmap-oq hover-effect animated-card" style="left: calc(4 * (100% / 52)); width: calc(8 * (100% / 52));">OQ: Enhance Missing Port Pair</div>
+                             </div>
+                         </div>
+
+                         <!-- Project: OQ: Transmode -->
+                         <div class="roadmap-project-row">
+                             <div class="roadmap-project-label">OQ:Transmode</div>
+                             <div class="roadmap-bar-wrapper">
+                                 <div class="roadmap-bar bg-roadmap-oq hover-effect animated-card" style="left: calc(8 * (100% / 52)); width: calc(8 * (100% / 52));">OQ:Transmode</div>
+                             </div>
+                         </div>
+
+                         <!-- Project: OQ: Inland tariff connection -->
+                         <div class="roadmap-project-row">
+                             <div class="roadmap-project-label">OQ: Inland tariff connection</div>
+                             <div class="roadmap-bar-wrapper">
+                                 <div class="roadmap-bar bg-roadmap-oq hover-effect animated-card" style="left: calc(12 * (100% / 52)); width: calc(8 * (100% / 52));">OQ: Inland tariff connection</div>
+                             </div>
+                         </div>
+
+                         <!-- Project: OQFlex: MVP-Short Term Online Quote -->
+                         <div class="roadmap-project-row">
+                             <div class="roadmap-project-label">OQFlex: MVP-Short Term Online Quote</div>
+                             <div class="roadmap-bar-wrapper">
+                                 <div class="roadmap-bar bg-roadmap-oqflex hover-effect animated-card" style="left: calc(8 * (100% / 52)); width: calc(18 * (100% / 52));">OQFlex: MVP-Short Term Online Quote</div>
+                             </div>
+                         </div>
+                         
+                         <!-- Project: OOG: Enhance Escalation Process -->
+                         <div class="roadmap-project-row">
+                             <div class="roadmap-project-label">OOG: Enhance Escalation Process</div>
+                             <div class="roadmap-bar-wrapper">
+                                 <div class="roadmap-bar bg-roadmap-oog hover-effect animated-card" style="left: calc(20 * (100% / 52)); width: calc(10 * (100% / 52));">OOG: Enhance Escalation Process</div>
+                             </div>
+                         </div>
+
+                         <!-- Project: Digital Campaign: Loyalty Programme -->
+                         <div class="roadmap-project-row">
+                             <div class="roadmap-project-label">Digital Campaign: Loyalty Programme</div>
+                             <div class="roadmap-bar-wrapper">
+                                 <div class="roadmap-bar bg-roadmap-digital hover-effect animated-card" style="left: calc(20 * (100% / 52)); width: calc(12 * (100% / 52));">Digital Campaign: Loyalty Programme</div>
+                             </div>
+                         </div>
+
+                         <!-- Project: OQ: SC Amendment Function -->
+                         <div class="roadmap-project-row">
+                             <div class="roadmap-project-label">OQ: SC Amendment Function</div>
+                             <div class="roadmap-bar-wrapper">
+                                 <div class="roadmap-bar bg-roadmap-oq hover-effect animated-card" style="left: calc(16 * (100% / 52)); width: calc(12 * (100% / 52));">OQ: SC Amendment Function</div>
+                             </div>
+                         </div>
+
+                         <!-- Project: OQ: Dynamic OQ Booking Amendment -->
+                         <div class="roadmap-project-row">
+                             <div class="roadmap-project-label">OQ: Dynamic OQ Booking Amendment</div>
+                             <div class="roadmap-bar-wrapper">
+                                 <div class="roadmap-bar bg-roadmap-oq hover-effect animated-card" style="left: calc(20 * (100% / 52)); width: calc(16 * (100% / 52));">OQ: Dynamic OQ Booking Amendment</div>
+                             </div>
+                         </div>
+
+                         <!-- Project: OQ: Automated CCL Invoice Creation -->
+                         <div class="roadmap-project-row">
+                             <div class="roadmap-project-label">OQ: Automated CCL Invoice Creation</div>
+                             <div class="roadmap-bar-wrapper">
+                                 <div class="roadmap-bar bg-roadmap-oq hover-effect animated-card" style="left: calc(20 * (100% / 52)); width: calc(16 * (100% / 52));">OQ: Automated CCL Invoice Creation</div>
+                             </div>
+                         </div>
+
+                         <!-- Project: OQ: Reflect Booking features from Quick Booking -->
+                         <div class="roadmap-project-row">
+                             <div class="roadmap-project-label">OQ: Reflect Booking features from Quick Booking</div>
+                             <div class="roadmap-bar-wrapper">
+                                 <div class="roadmap-bar bg-roadmap-oq hover-effect animated-card" style="left: calc(16 * (100% / 52)); width: calc(16 * (100% / 52));">OQ: Reflect Booking features from Quick Booking</div>
+                             </div>
+                         </div>
+                         
+                         <!-- Project: OQ: Enhanced OQ special Freetime control feature -->
+                         <div class="roadmap-project-row">
+                             <div class="roadmap-project-label">OQ: Enhanced OQ special Freetime control feature</div>
+                             <div class="roadmap-bar-wrapper">
+                                 <div class="roadmap-bar bg-roadmap-oq hover-effect animated-card" style="left: calc(20 * (100% / 52)); width: calc(16 * (100% / 52));">OQ: Enhanced OQ special Freetime control feature</div>
+                             </div>
+                         </div>
+
+                         <!-- Project: OQ: CA/CT Control for Reefer biz -->
+                         <div class="roadmap-project-row">
+                             <div class="roadmap-project-label">OQ: CA/CT Control for Reefer biz</div>
+                             <div class="roadmap-bar-wrapper">
+                                 <div class="roadmap-bar bg-roadmap-oq hover-effect animated-card" style="left: calc(28 * (100% / 52)); width: calc(16 * (100% / 52));">OQ: CA/CT Control for Reefer biz</div>
+                             </div>
+                         </div>
+
+                         <!-- Project: OQ: Value Added Service - Online Insurance selling feature (TBC) -->
+                         <div class="roadmap-project-row">
+                             <div class="roadmap-project-label">OQ: Value Added Service - Online Insurance selling feature (TBC)</div>
+                             <div class="roadmap-bar-wrapper">
+                                 <div class="roadmap-bar bg-roadmap-oq hover-effect animated-card" style="left: calc(33 * (100% / 52)); width: calc(13 * (100% / 52));">OQ: Value Added Service - Online Insurance selling feature (TBC)</div>
+                             </div>
+                         </div>
+
+                         <!-- Project: OQ: Value Added Service - Online 'China Customs Clearance' selling feature (TBC) -->
+                         <div class="roadmap-project-row">
+                             <div class="roadmap-project-label">OQ: Value Added Service - Online 'China Customs Clearance' selling feature (TBC)</div>
+                             <div class="roadmap-bar-wrapper">
+                                 <div class="roadmap-bar bg-roadmap-oq hover-effect animated-card" style="left: calc(37 * (100% / 52)); width: calc(13 * (100% / 52));">OQ: Value Added Service - Online 'China Customs Clearance' selling feature (TBC)</div>
+                             </div>
+                         </div>
+
+                     </div>
+                 </div>
+                 <!-- Today Marker and Label -->
+                 <div id="today-marker" class="today-marker-line">
+                    <div class="today-marker-label">Today</div>
+                 </div>
+             </div>
+        </section>
+
+        <section id="oog-roadmap-topic" class="py-20 lg:py-32">
+            <div class="container mx-auto px-6"><div class="glass-pane rounded-3xl p-8 md:p-12 text-center"><h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">OOG Roadmap</h2><p class="text-xl text-gray-600">Content to be added.</p></div></div>
+        </section>
+        <section id="digital-marketing-topic" class="py-20 lg:py-32">
+            <div class="container mx-auto px-6"><div class="glass-pane rounded-3xl p-8 md:p-12 text-center"><h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">Digital Marketing PoC</h2><p class="text-xl text-gray-600">Content to be added.</p></div></div>
+        </section>
+        <section id="q-and-a-topic" class="py-20 lg:py-32">
+            <div class="container mx-auto px-6">
+                <div class="glass-pane rounded-3xl p-8 md:p-12 text-center">
+                    <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">Q&A</h2>
+                    <p class="text-xl text-gray-600">Please feel free to ask any questions.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Mobile Menu Toggle
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+
+            // Staggered animation for elements on load/scroll
+            const animatedItems = document.querySelectorAll('.animated-card'); // Select all animated cards
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        setTimeout(() => {
+                            if (entry.target) {
+                                 entry.target.classList.add('visible');
+                            }
+                        }, 150 * (index % 5)); // reset delay to avoid long waits on long pages
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            animatedItems.forEach(item => {
+                observer.observe(item);
+            });
+
+            // Sticky Nav
+            const stickyNav = document.getElementById('sticky-nav');
+            const heroSection = document.getElementById('agenda');
+
+            if (stickyNav && heroSection) {
+                window.addEventListener('scroll', () => {
+                    const heroHeight = heroSection.offsetHeight;
+                    if (window.scrollY > heroHeight - 50) {
+                        stickyNav.classList.remove('-translate-y-full');
+                    } else {
+                        stickyNav.classList.add('-translate-y-full');
+                    }
+                });
+            }
+
+            // Calculate and position "Today" marker
+            const roadmapSectionContainer = document.querySelector('#aoq-roadmap-topic .glass-pane');
+            let todayMarker = document.getElementById('today-marker');
+
+            // Create marker div if it doesn't exist
+            if (!todayMarker) {
+                todayMarker = document.createElement('div');
+                todayMarker.id = 'today-marker';
+                todayMarker.className = 'today-marker-line';
+                const todayLabel = document.createElement('div');
+                todayLabel.className = 'today-marker-label';
+                todayLabel.textContent = 'Today';
+                todayMarker.appendChild(todayLabel);
+                // Append it to the roadmap container to ensure it scrolls with it
+                if (roadmapSectionContainer) {
+                    roadmapSectionContainer.style.position = 'relative'; // Ensure positioning context
+                    roadmapSectionContainer.appendChild(todayMarker);
+                }
+            }
+
+
+            if (roadmapSectionContainer && todayMarker) {
+                const calculateTodayPosition = () => {
+                    const roadmapGrid = roadmapSectionContainer.querySelector('.roadmap-timeline-grid');
+                    if (!roadmapGrid) return;
+
+                    const gridRect = roadmapGrid.getBoundingClientRect();
+                    const containerRect = roadmapSectionContainer.getBoundingClientRect();
+                    
+                    // Roadmap timeline: April 1, 2025 to March 31, 2026
+                    const roadmapStart = new Date(2025, 3, 1); // April is month 3 (0-indexed)
+                    const roadmapEnd = new Date(2026, 2, 31);   // March is month 2 (0-indexed)
+                    
+                    const today = new Date();
+                    // For testing specific dates:
+                    // const today = new Date(2025, 6, 15); // Example: July 15, 2025 (Week ~16)
+                    // const today = new Date(2025, 3, 5); // Example: April 5, 2025 (Week ~1)
+                    // const today = new Date(2026, 2, 28); // Example: Feb 28, 2026 (Week ~48)
+
+
+                    const totalRoadmapDurationMs = roadmapEnd.getTime() - roadmapStart.getTime();
+                    let elapsedRoadmapDurationMs = today.getTime() - roadmapStart.getTime();
+
+                    // Calculate position ratio (0 to 1)
+                    let positionRatio = (elapsedRoadmapDurationMs / totalRoadmapDurationMs);
+
+                    // Clamp position to 0-1
+                    if (positionRatio < 0) positionRatio = 0;
+                    if (positionRatio > 1) positionRatio = 1;
+
+                    // Calculate pixel position relative to the grid's start
+                    // The timeline grid's columns are 1fr, and the first column (label column) is 120px
+                    // So, the bars start after the 120px column and the grid's own padding.
+                    const labelColumnWidth = 120; // Fixed width of the project label column
+                    const gridGap = 0.25 * 16; // 0.25rem converted to pixels (assuming 1rem = 16px)
+
+                    // Get the actual computed padding-left of the grid (to handle responsive changes)
+                    const computedGridStyle = window.getComputedStyle(roadmapGrid);
+                    const gridPaddingLeft = parseFloat(computedGridStyle.paddingLeft);
+
+                    // Calculate the usable width for the 52 weeks within the grid's bar area
+                    // roadmapGrid.offsetWidth includes all columns + gaps + padding.
+                    // We need the width of just the 52 '1fr' columns.
+                    const totalGridWidth = roadmapGrid.offsetWidth;
+                    const weekColumnWidth = (totalGridWidth - labelColumnWidth - (52 * gridGap)) / 52;
+                    
+                    const pixelPositionX = (positionRatio * 52 * weekColumnWidth) + labelColumnWidth + gridPaddingLeft;
+                    
+                    todayMarker.style.left = `${pixelPositionX}px`;
+                    todayMarker.style.height = `${roadmapGrid.offsetHeight}px`; // Span grid height
+                    todayMarker.style.top = `${roadmapGrid.offsetTop}px`; // Position relative to grid top
+                    //todayMarker.style.transform = `translateY(${window.scrollY - containerRect.top}px)`; /* Scroll with content */
+                };
+
+                calculateTodayPosition();
+                window.addEventListener('resize', calculateTodayPosition);
+                // The marker position needs to be updated relative to the viewport, not just scroll
+                window.addEventListener('scroll', calculateTodayPosition);
+            }
+        });
+    </script>
+</body>
+</html>
